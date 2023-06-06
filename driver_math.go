@@ -17,19 +17,19 @@ type DriverMath struct {
 	// Width Captcha png width in pixel.
 	Width int
 
-	//NoiseCount text noise count.
+	// NoiseCount text noise count.
 	NoiseCount int
 
-	//ShowLineOptions := OptionShowHollowLine | OptionShowSlimeLine | OptionShowSineLine .
+	// ShowLineOptions := OptionShowHollowLine | OptionShowSlimeLine | OptionShowSineLine .
 	ShowLineOptions int
 
-	//BgColor captcha image background color (optional)
+	// BgColor captcha image background color (optional)
 	BgColor *color.RGBA
 
-	//fontsStorage font storage (optional)
+	// fontsStorage font storage (optional)
 	fontsStorage FontsStorage
 
-	//Fonts loads by name see fonts.go's comment
+	// Fonts loads by name see fonts.go's comment
 	Fonts      []string
 	fontsArray []*truetype.Font
 }

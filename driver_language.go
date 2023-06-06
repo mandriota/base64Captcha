@@ -114,7 +114,7 @@ func (d *DriverLanguage) DrawCaptcha(content string) (item Item, err error) {
 
 	//draw content
 	//use font that match your language
-	err = itemChar.drawText(content, []*truetype.Font{fontChinese})
+	err = itemChar.drawText(content, []*truetype.Font{fontsSimple[0]})
 	if err != nil {
 		return
 	}
