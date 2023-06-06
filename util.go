@@ -16,6 +16,7 @@ func parseDigitsToString(bytes []byte) string {
 	}
 	return string(stringB)
 }
+
 func stringToFakeByte(content string) []byte {
 	digits := make([]byte, len(content))
 	for idx, cc := range content {
@@ -82,6 +83,7 @@ func itemWriteFile(cap Item, outputDir, fileName, fileExt string) error {
 	_, err = cap.WriteTo(file)
 	return err
 }
+
 func pathExists(path string) bool {
 	_, err := os.Stat(path)
 	if err == nil {
