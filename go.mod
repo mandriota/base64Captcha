@@ -1,4 +1,4 @@
-module github.com/mandriota/base64Captcha
+module github.com/mandriota/gatewarden-captcha
 
 go 1.16
 
