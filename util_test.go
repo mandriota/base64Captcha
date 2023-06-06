@@ -3,35 +3,8 @@ package base64Captcha
 import (
 	"os"
 	"path/filepath"
-	"reflect"
 	"testing"
 )
-
-func Test_parseDigitsToString(t *testing.T) {
-	for i := 1; i < 10; i++ {
-		digti := randomDigits(i)
-		s := parseDigitsToString(digti)
-		if len(s) != i {
-			t.Error("failed")
-		}
-
-	}
-
-}
-
-func Test_stringToFakeByte(t *testing.T) {
-	for i := 1; i < 10; i++ {
-		digti := randomDigits(i)
-		s := parseDigitsToString(digti)
-		if len(s) != i {
-			t.Error("failed")
-		}
-		fb := stringToFakeByte(s)
-		if !reflect.DeepEqual(fb, digti) {
-			t.Error("failed")
-		}
-	}
-}
 
 func Test_randomDigits(t *testing.T) {
 	for i := 1; i < 10; i++ {

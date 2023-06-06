@@ -8,23 +8,6 @@ import (
 	"path/filepath"
 )
 
-// parseDigitsToString parse randomDigits to normal string
-func parseDigitsToString(bytes []byte) string {
-	stringB := make([]byte, len(bytes))
-	for idx, by := range bytes {
-		stringB[idx] = by + '0'
-	}
-	return string(stringB)
-}
-
-func stringToFakeByte(content string) []byte {
-	digits := make([]byte, len(content))
-	for idx, cc := range content {
-		digits[idx] = byte(cc - '0')
-	}
-	return digits
-}
-
 // randomDigits returns a byte slice of the given length containing
 // pseudorandom numbers in range 0-9. The slice can be used as a captcha
 // solution.
