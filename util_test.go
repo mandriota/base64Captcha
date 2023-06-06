@@ -66,13 +66,12 @@ func Test_itemWriteFile(t *testing.T) {
 }
 
 func Test_pathExists(t *testing.T) {
-	td := os.TempDir()
-	defer os.RemoveAll(td)
-	p := filepath.Join(td, RandomId())
+	p := filepath.Join(os.TempDir(), RandomId())
 	if pathExists(p) {
 		t.Error("failed")
 	}
 	_ = os.MkdirAll(p, os.ModePerm)
+	defer os.Remove(p)
 
 	if !pathExists(p) {
 		t.Error("failed")
