@@ -1,6 +1,7 @@
 package base64Captcha
 
 import (
+	"errors"
 	"image/color"
 	"strings"
 
@@ -8,7 +9,7 @@ import (
 )
 
 // DriverChar captcha config for captcha-engine-characters.
-type DriverString struct {
+type driverString struct {
 	// Height png height in pixel.
 	Height int
 
@@ -39,9 +40,9 @@ type DriverString struct {
 }
 
 // NewDriverString creates driver
-func NewDriverString(height int, width int, noiseCount int, showLineOptions int, length int, source string, bgColor *color.RGBA, fontsStorage FontsStorage, fonts []string) *DriverString {
+func NewDriverString(height int, width int, noiseCount int, showLineOptions int, length int, source string, bgColor *color.RGBA, fontsStorage FontsStorage, fonts []string) (*driverString, error) {
 	if fontsStorage == nil {
-		fontsStorage = DefaultEmbeddedFonts
+		return nil, errors.New("fontsStorage must not be nil")
 	}
 
 	tfs := []*truetype.Font{}
@@ -51,25 +52,18 @@ func NewDriverString(height int, width int, noiseCount int, showLineOptions int,
 	}
 
 	if len(tfs) == 0 {
-		tfs = fontsAll
+		return nil, errors.New("must be provided at least 1 valid font name in fonts")
 	}
 
-	return &DriverString{Height: height, Width: width, NoiseCount: noiseCount, ShowLineOptions: showLineOptions, Length: length, Source: source, BgColor: bgColor, fontsStorage: fontsStorage, fontsArray: tfs, Fonts: fonts}
+	return &driverString{Height: height, Width: width, NoiseCount: noiseCount, ShowLineOptions: showLineOptions, Length: length, Source: source, BgColor: bgColor, fontsStorage: fontsStorage, fontsArray: tfs, Fonts: fonts}, nil
 }
 
 // ConvertFonts loads fonts by names
-func (d *DriverString) ConvertFonts() *DriverString {
-	if d.fontsStorage == nil {
-		d.fontsStorage = DefaultEmbeddedFonts
-	}
-
+func (d *driverString) ConvertFonts() *driverString {
 	tfs := []*truetype.Font{}
 	for _, fff := range d.Fonts {
 		tf := d.fontsStorage.LoadFontByName("fonts/" + fff)
 		tfs = append(tfs, tf)
-	}
-	if len(tfs) == 0 {
-		tfs = fontsAll
 	}
 
 	d.fontsArray = tfs
@@ -78,14 +72,14 @@ func (d *DriverString) ConvertFonts() *DriverString {
 }
 
 // GenerateIdQuestionAnswer creates id,content and answer
-func (d *DriverString) GenerateIdQuestionAnswer() (id, content, answer string) {
+func (d *driverString) GenerateIdQuestionAnswer() (id, content, answer string) {
 	id = RandomId()
 	content = RandText(d.Length, d.Source)
 	return id, content, content
 }
 
 // DrawCaptcha draws captcha item
-func (d *DriverString) DrawCaptcha(content string) (item Item, err error) {
+func (d *driverString) DrawCaptcha(content string) (item Item, err error) {
 
 	var bgc color.RGBA
 	if d.BgColor != nil {

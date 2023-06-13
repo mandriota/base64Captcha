@@ -11,11 +11,16 @@ import (
 	"log"
 	"math"
 	"math/rand"
+	"time"
 
 	"github.com/golang/freetype"
 	"github.com/golang/freetype/truetype"
 	"golang.org/x/image/font"
 )
+
+func init() {
+	rand.Seed(int64(time.Now().Nanosecond()))
+}
 
 // ItemChar captcha item of unicode characters
 type ItemChar struct {
@@ -191,7 +196,7 @@ func (item *ItemChar) drawNoise(noiseText string, fonts []*truetype.Font) error 
 		fontSize := rawFontSize/2 + float64(rand.Intn(5))
 		c.SetSrc(image.NewUniform(RandLightColor()))
 		c.SetFontSize(fontSize)
-		c.SetFont(randFontFrom(fonts))
+		c.SetFont(fonts[rand.Intn(len(fonts))])
 		pt := freetype.Pt(rw, rh)
 		if _, err := c.DrawString(string(char), pt); err != nil {
 			log.Println(err)
@@ -219,7 +224,7 @@ func (item *ItemChar) drawText(text string, fonts []*truetype.Font) error {
 		fontSize := item.height * (rand.Intn(7) + 7) / 16
 		c.SetSrc(image.NewUniform(RandDeepColor()))
 		c.SetFontSize(float64(fontSize))
-		c.SetFont(randFontFrom(fonts))
+		c.SetFont(fonts[rand.Intn(len(fonts))])
 		x := fontWidth*i + fontWidth/fontSize
 		y := item.height/2 + fontSize/2 - rand.Intn(item.height/16*3)
 		pt := freetype.Pt(x, y)

@@ -26,19 +26,19 @@ func TestDriverMath_DrawCaptcha(t *testing.T) {
 		wantErr  bool
 	}{
 		{"Math",
-			fields{80, 240, 5, OptionShowSineLine | OptionShowSlimeLine | OptionShowHollowLine, nil, []string{"3Dumb.ttf"}},
+			fields{80, 240, 5, OptionShowSineLine | OptionShowSlimeLine | OptionShowHollowLine, nil, []string{"Comismsh.ttf"}},
 			args{""},
 			nil, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			d := &DriverMath{
+			d := &driverMath{
 				Height:          tt.fields.Height,
 				Width:           tt.fields.Width,
 				NoiseCount:      tt.fields.NoiseCount,
 				ShowLineOptions: tt.fields.ShowLineOptions,
 				BgColor:         tt.fields.BgColor,
-				fontsStorage:    DefaultEmbeddedFonts,
+				fontsStorage:    embeddedFonts,
 				Fonts:           tt.fields.Fonts,
 			}
 			d.ConvertFonts()
@@ -67,14 +67,14 @@ func TestNewDriverMath(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want *DriverMath
+		want *driverMath
 	}{
 		// TODO: Add test cases.
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := NewDriverMath(tt.args.height, tt.args.width, tt.args.noiseCount, tt.args.showLineOptions, tt.args.bgColor, nil, tt.args.fonts); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("NewDriverMath() = %v, want %v", got, tt.want)
+			if got, err := NewDriverMath(tt.args.height, tt.args.width, tt.args.noiseCount, tt.args.showLineOptions, tt.args.bgColor, nil, tt.args.fonts); !reflect.DeepEqual(got, tt.want) || err != nil {
+				t.Errorf("NewDriverMath() = %v, want %v, error: %v", got, tt.want, err)
 			}
 		})
 	}
@@ -83,8 +83,8 @@ func TestNewDriverMath(t *testing.T) {
 func TestDriverMath_ConvertFonts(t *testing.T) {
 	tests := []struct {
 		name string
-		d    *DriverMath
-		want *DriverMath
+		d    *driverMath
+		want *driverMath
 	}{
 		// TODO: Add test cases.
 	}
@@ -100,7 +100,7 @@ func TestDriverMath_ConvertFonts(t *testing.T) {
 func TestDriverMath_GenerateIdQuestionAnswer(t *testing.T) {
 	tests := []struct {
 		name         string
-		d            *DriverMath
+		d            *driverMath
 		wantId       string
 		wantQuestion string
 		wantAnswer   string

@@ -1,6 +1,7 @@
 package base64Captcha
 
 import (
+	"embed"
 	"testing"
 )
 
@@ -16,15 +17,19 @@ import (
 // fonts/chromohv.ttf (45.9kB)
 // fonts/readme.md (162B)
 
+//go:embed fonts/*.ttf
+var fonts embed.FS
+
+var embeddedFonts = NewEmbeddedFontsStorage(fonts)
+
 func Test_loadFontByName(t *testing.T) {
-	f := DefaultEmbeddedFonts.LoadFontByName("fonts/actionj.ttf")
+	f := embeddedFonts.LoadFontByName("fonts/Comismsh.ttf")
 	if f == nil {
 		t.Error("failed")
 	}
 
 	defer recoverPanic(t)
-	f = DefaultEmbeddedFonts.LoadFontByName("fonts/readme.md")
-
+	_ = embeddedFonts.LoadFontByName("fonts/readme.md")
 }
 func recoverPanic(t *testing.T) {
 	r := recover()
@@ -35,17 +40,10 @@ func recoverPanic(t *testing.T) {
 
 func Test_loadFontsByNames(t *testing.T) {
 
-	fs := DefaultEmbeddedFonts.LoadFontsByNames([]string{"fonts/chromohv.ttf", "fonts/RitaSmith.ttf"})
-	if len(fs) != 2 {
+	fs := embeddedFonts.LoadFontsByNames([]string{"fonts/Comismsh.ttf"})
+	if len(fs) != 1 {
 		t.Error("failed")
 	}
 	defer recoverPanic(t)
-	DefaultEmbeddedFonts.LoadFontsByNames([]string{"fonts/actionj.txxxxxtf"})
-}
-
-func Test_randFontFrom(t *testing.T) {
-	f := randFontFrom(fontsAll)
-	if f == nil {
-		t.Error("failed")
-	}
+	embeddedFonts.LoadFontsByNames([]string{"fonts/actionj.txxxxxtf"})
 }

@@ -1,6 +1,7 @@
 package base64Captcha
 
 import (
+	"errors"
 	"fmt"
 	"image/color"
 	"math/rand"
@@ -10,7 +11,7 @@ import (
 )
 
 // DriverMath captcha config for captcha math
-type DriverMath struct {
+type driverMath struct {
 	// Height png height in pixel.
 	Height int
 
@@ -35,9 +36,9 @@ type DriverMath struct {
 }
 
 // NewDriverMath creates a driver of math
-func NewDriverMath(height int, width int, noiseCount int, showLineOptions int, bgColor *color.RGBA, fontsStorage FontsStorage, fonts []string) *DriverMath {
+func NewDriverMath(height int, width int, noiseCount int, showLineOptions int, bgColor *color.RGBA, fontsStorage FontsStorage, fonts []string) (*driverMath, error) {
 	if fontsStorage == nil {
-		fontsStorage = DefaultEmbeddedFonts
+		return nil, errors.New("fontsStorage must not be nil")
 	}
 
 	tfs := []*truetype.Font{}
@@ -47,25 +48,18 @@ func NewDriverMath(height int, width int, noiseCount int, showLineOptions int, b
 	}
 
 	if len(tfs) == 0 {
-		tfs = fontsAll
+		return nil, errors.New("must be provided at least 1 valid font name in fonts")
 	}
 
-	return &DriverMath{Height: height, Width: width, NoiseCount: noiseCount, ShowLineOptions: showLineOptions, fontsArray: tfs, BgColor: bgColor, Fonts: fonts}
+	return &driverMath{Height: height, Width: width, NoiseCount: noiseCount, ShowLineOptions: showLineOptions, fontsArray: tfs, BgColor: bgColor, Fonts: fonts}, nil
 }
 
 // ConvertFonts loads fonts from names
-func (d *DriverMath) ConvertFonts() *DriverMath {
-	if d.fontsStorage == nil {
-		d.fontsStorage = DefaultEmbeddedFonts
-	}
-
+func (d *driverMath) ConvertFonts() *driverMath {
 	tfs := []*truetype.Font{}
 	for _, fff := range d.Fonts {
 		tf := d.fontsStorage.LoadFontByName("fonts/" + fff)
 		tfs = append(tfs, tf)
-	}
-	if len(tfs) == 0 {
-		tfs = fontsAll
 	}
 	d.fontsArray = tfs
 
@@ -73,7 +67,7 @@ func (d *DriverMath) ConvertFonts() *DriverMath {
 }
 
 // GenerateIdQuestionAnswer creates id,captcha content and answer
-func (d *DriverMath) GenerateIdQuestionAnswer() (id, question, answer string) {
+func (d *driverMath) GenerateIdQuestionAnswer() (id, question, answer string) {
 	id = RandomId()
 	operators := []string{"+", "-", "x"}
 	var mathResult int32
@@ -101,7 +95,7 @@ func (d *DriverMath) GenerateIdQuestionAnswer() (id, question, answer string) {
 }
 
 // DrawCaptcha creates math captcha item
-func (d *DriverMath) DrawCaptcha(question string) (item Item, err error) {
+func (d *driverMath) DrawCaptcha(question string) (item Item, err error) {
 	var bgc color.RGBA
 	if d.BgColor != nil {
 		bgc = *d.BgColor
@@ -118,7 +112,7 @@ func (d *DriverMath) DrawCaptcha(question string) (item Item, err error) {
 	//背景有文字干扰
 	if d.NoiseCount > 0 {
 		noise := RandText(d.NoiseCount, strings.Repeat(TxtNumbers, d.NoiseCount))
-		err = itemChar.drawNoise(noise, fontsAll)
+		err = itemChar.drawNoise(noise, d.fontsArray)
 		if err != nil {
 			return
 		}

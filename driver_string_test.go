@@ -29,11 +29,11 @@ func TestDriverString_DrawCaptcha(t *testing.T) {
 		wantItem Item
 		wantErr  bool
 	}{
-		{"string", fields{80, 240, 20, 100, 2, 5, nil, fontsAll}, args{"45Ad8"}, nil, false},
+		{"string", fields{80, 240, 20, 100, 2, 5, nil, embeddedFonts.LoadFontsByNames([]string{"fonts/Comismsh.ttf"})}, args{"45Ad8"}, nil, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			d := &DriverString{
+			d := &driverString{
 				Height:          tt.fields.Height,
 				Width:           tt.fields.Width,
 				NoiseCount:      tt.fields.NoiseTextCount,
@@ -70,14 +70,14 @@ func TestNewDriverString(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want *DriverString
+		want *driverString
 	}{
 		// TODO: Add test cases.
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := NewDriverString(tt.args.height, tt.args.width, tt.args.noiseCount, tt.args.showLineOptions, tt.args.length, tt.args.source, tt.args.bgColor, nil, tt.args.fonts); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("NewDriverString() = %v, want %v", got, tt.want)
+			if got, err := NewDriverString(tt.args.height, tt.args.width, tt.args.noiseCount, tt.args.showLineOptions, tt.args.length, tt.args.source, tt.args.bgColor, nil, tt.args.fonts); !reflect.DeepEqual(got, tt.want) || err != nil {
+				t.Errorf("NewDriverString() = %v, want %v, error: %v", got, tt.want, err)
 			}
 		})
 	}
@@ -86,8 +86,8 @@ func TestNewDriverString(t *testing.T) {
 func TestDriverString_ConvertFonts(t *testing.T) {
 	tests := []struct {
 		name string
-		d    *DriverString
-		want *DriverString
+		d    *driverString
+		want *driverString
 	}{
 		// TODO: Add test cases.
 	}
@@ -103,7 +103,7 @@ func TestDriverString_ConvertFonts(t *testing.T) {
 func TestDriverString_GenerateIdQuestionAnswer(t *testing.T) {
 	tests := []struct {
 		name        string
-		d           *DriverString
+		d           *driverString
 		wantId      string
 		wantContent string
 		wantAnswer  string
