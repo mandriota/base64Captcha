@@ -15,7 +15,6 @@ import (
 // fonts/actionj.ttf (34.944kB)
 // fonts/chromohv.ttf (45.9kB)
 // fonts/readme.md (162B)
-// fonts/wqy-microhei.ttc (5.177MB)
 
 func Test_loadFontByName(t *testing.T) {
 	f := DefaultEmbeddedFonts.LoadFontByName("fonts/actionj.ttf")

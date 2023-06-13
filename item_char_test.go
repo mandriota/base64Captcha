@@ -195,18 +195,18 @@ func TestItemChar_WriteTo(t *testing.T) {
 	}
 }
 
-func TestItemChar_EncodeB64string(t *testing.T) {
+func TestItemChar_EncodeBinary(t *testing.T) {
 	tests := []struct {
 		name string
 		item *ItemChar
-		want string
+		want []byte
 	}{
 		// TODO: Add test cases.
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.item.EncodeB64string(); got != tt.want {
-				t.Errorf("ItemChar.EncodeB64string() = %v, want %v", got, tt.want)
+			if got := tt.item.EncodeBinary(); !bytes.Equal(got, tt.want) {
+				t.Errorf("ItemChar.EncodeBinary() = %v, want %v", got, tt.want)
 			}
 		})
 	}

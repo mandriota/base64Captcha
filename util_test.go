@@ -6,16 +6,6 @@ import (
 	"testing"
 )
 
-func Test_randomDigits(t *testing.T) {
-	for i := 1; i < 10; i++ {
-		digti := randomDigits(i)
-		if len(digti) != i {
-			t.Error("failed")
-		}
-
-	}
-}
-
 func Test_randomBytes(t *testing.T) {
 	for i := 1; i < 10; i++ {
 		digti := randomBytes(i)

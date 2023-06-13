@@ -8,13 +8,6 @@ import (
 	"path/filepath"
 )
 
-// randomDigits returns a byte slice of the given length containing
-// pseudorandom numbers in range 0-9. The slice can be used as a captcha
-// solution.
-func randomDigits(length int) []byte {
-	return randomBytesMod(length, 10)
-}
-
 // randomBytes returns a byte slice of the given length read from CSPRNG.
 func randomBytes(length int) (b []byte) {
 	b = make([]byte, length)

@@ -11,7 +11,7 @@ import (
 
 // DriverMath captcha config for captcha math
 type DriverMath struct {
-	//Height png height in pixel.
+	// Height png height in pixel.
 	Height int
 
 	// Width Captcha png width in pixel.

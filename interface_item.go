@@ -8,6 +8,4 @@ type Item interface {
 	WriteTo(w io.Writer) (n int64, err error)
 	// EncodeBinary encodes as raw byte slice
 	EncodeBinary() []byte
-	// EncodeB64string encodes as base64 string
-	EncodeB64string() string
 }

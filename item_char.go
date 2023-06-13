@@ -2,9 +2,7 @@ package base64Captcha
 
 import (
 	"bytes"
-	"encoding/base64"
 	"errors"
-	"fmt"
 	"image"
 	"image/color"
 	"image/draw"
@@ -21,10 +19,10 @@ import (
 
 // ItemChar captcha item of unicode characters
 type ItemChar struct {
-	bgColor color.Color
-	width   int
-	height  int
-	nrgba   *image.NRGBA
+	// bgColor color.Color
+	width  int
+	height int
+	nrgba  *image.NRGBA
 }
 
 // NewItemChar creates a captcha item of characters
@@ -246,11 +244,6 @@ func (item *ItemChar) EncodeBinary() []byte {
 func (item *ItemChar) WriteTo(w io.Writer) (int64, error) {
 	n, err := w.Write(item.EncodeBinary())
 	return int64(n), err
-}
-
-// EncodeB64string encodes an image to base64 string
-func (item *ItemChar) EncodeB64string() string {
-	return fmt.Sprintf("data:%s;base64,%s", MimeTypeImage, base64.StdEncoding.EncodeToString(item.EncodeBinary()))
 }
 
 type point struct {
